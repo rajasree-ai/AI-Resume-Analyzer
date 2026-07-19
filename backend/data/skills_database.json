@@ -1,0 +1,7 @@
+{
+  "programming": ["python", "java", "javascript", "c++", "c#", "ruby", "php", "swift", "kotlin", "typescript"],
+  "web_development": ["react", "angular", "vue", "node.js", "html", "css", "django", "flask", "spring"],
+  "data_science": ["pandas", "numpy", "scikit-learn", "tensorflow", "pytorch", "keras", "matplotlib"],
+  "cloud": ["aws", "azure", "gcp", "docker", "kubernetes", "terraform", "jenkins"],
+  "soft_skills": ["communication", "leadership", "teamwork", "problem-solving", "critical thinking"]
+}

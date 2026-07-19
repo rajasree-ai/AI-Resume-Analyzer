@@ -1,0 +1,135 @@
+/* ========================================
+   Dark Mode Theme
+   ======================================== */
+[data-theme="dark"] {
+    --bg-primary: #1A1A2E;
+    --bg-secondary: #16213E;
+    --bg-tertiary: #1A1A3E;
+    
+    --text-primary: #E8E8E8;
+    --text-secondary: #A0A0B8;
+    --text-muted: #6B6B84;
+    --text-inverse: #FFFFFF;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.2);
+}
+
+[data-theme="dark"] .navbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+}
+
+[data-theme="dark"] .upload-area {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .upload-area.dragover {
+    border-color: var(--primary);
+    background: rgba(108, 99, 255, 0.05);
+}
+
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .skill-card,
+[data-theme="dark"] .dashboard-card,
+[data-theme="dark"] .job-input-card,
+[data-theme="dark"] .score-card,
+[data-theme="dark"] .upload-container,
+[data-theme="dark"] .modal-content {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .job-input-card textarea {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .job-input-card textarea:focus {
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .skill-tag {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .tab-btn {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .tab-btn:hover {
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .tab-btn.active {
+    background: var(--primary-gradient);
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .toast {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .visual-card {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .float-icon {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .about-card {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .score-bg {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .progress-bg {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-content {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .footer {
+    background: #0D0D1A;
+}
+
+[data-theme="dark"] .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Dark mode scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
