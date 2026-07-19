@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import re
 import jwt
 import os
+import hashlib
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -23,17 +24,8 @@ def generate_auth_token(user_id, expires_in=7):
     }
     return jwt.encode(payload, os.environ.get('SECRET_KEY', 'dev-key'), algorithm='HS256')
 
-def verify_auth_token(token):
-    """Verify JWT token"""
-    try:
-        payload = jwt.decode(token, os.environ.get('SECRET_KEY', 'dev-key'), algorithms=['HS256'])
-        return payload
-    except:
-        return None
-
 def hash_password(password):
-    """Simple password hashing (use bcrypt in production)"""
-    import hashlib
+    """Simple password hashing"""
     return hashlib.sha256(password.encode()).hexdigest()
 
 def verify_password(password, password_hash):
@@ -69,7 +61,7 @@ def register():
         if len(password) < 6:
             return jsonify({'error': 'Password must be at least 6 characters'}), 400
         
-        # Check existing users
+        # Check existing users (in-memory for demo)
         app = current_app
         for user in app.users.values():
             if user['username'] == username:
@@ -97,7 +89,6 @@ def register():
         
         app.users[user_id] = user
         
-        # Generate token
         token = generate_auth_token(user_id)
         
         return jsonify({
@@ -148,10 +139,8 @@ def login():
         if not user['is_active']:
             return jsonify({'error': 'Account deactivated'}), 401
         
-        # Update last login
         user['last_login'] = datetime.utcnow().isoformat()
         
-        # Generate token
         token = generate_auth_token(user['id'])
         
         return jsonify({

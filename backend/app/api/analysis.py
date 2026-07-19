@@ -60,24 +60,9 @@ def analyze_resume(resume_id):
         analysis_id = app.analysis_id_counter
         app.analysis_id_counter += 1
         
-        # Create job record
-        job_id = app.job_id_counter
-        app.job_id_counter += 1
-        
-        job = {
-            'id': job_id,
-            'title': data.get('job_title', 'Unknown'),
-            'company': data.get('company', 'Unknown'),
-            'description': job_description,
-            'skills': job_skills,
-            'created_at': datetime.utcnow().isoformat()
-        }
-        app.jobs[job_id] = job
-        
         analysis = {
             'id': analysis_id,
             'resume_id': resume_id,
-            'job_id': job_id,
             'overall_score': overall_score,
             'matching_skills': matching,
             'missing_skills': missing,

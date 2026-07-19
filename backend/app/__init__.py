@@ -5,6 +5,8 @@ Flask Application Factory
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -23,6 +25,8 @@ def create_app():
     
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-please-change-in-production')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///resume_analyzer.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'docx', 'txt'}
@@ -34,6 +38,8 @@ def create_app():
     app.config['JWT_TOKEN_LOCATION'] = ['headers', 'json']
     
     # Initialize extensions
+    db = SQLAlchemy(app)
+    bcrypt = Bcrypt(app)
     jwt = JWTManager(app)
     CORS(app, origins='*', supports_credentials=True)
     
@@ -42,55 +48,32 @@ def create_app():
     os.makedirs('backend/data', exist_ok=True)
     
     # =============================================
-    # IN-MEMORY STORAGE (for demo purposes)
+    # Register blueprints - FIXED IMPORTS
     # =============================================
-    app.users = {}
-    app.resumes = {}
-    app.analyses = {}
-    app.jobs = {}
-    app.user_id_counter = 1
-    app.resume_id_counter = 1
-    app.analysis_id_counter = 1
-    app.job_id_counter = 1
     
-    # =============================================
-    # Register blueprints - SIMPLE IMPORT
-    # =============================================
+    # Import and register auth blueprint
     try:
-        from app.api.auth import auth_bp
+        from .api.auth import auth_bp
         app.register_blueprint(auth_bp)
         print("✅ Auth blueprint loaded")
-    except ImportError:
-        try:
-            from api.auth import auth_bp
-            app.register_blueprint(auth_bp)
-            print("✅ Auth blueprint loaded (alt)")
-        except ImportError as e:
-            print(f"⚠️  Could not load auth blueprint: {e}")
+    except ImportError as e:
+        print(f"⚠️  Could not load auth blueprint: {e}")
     
+    # Import and register resume blueprint
     try:
-        from app.api.resume import resume_bp
+        from .api.resume import resume_bp
         app.register_blueprint(resume_bp)
         print("✅ Resume blueprint loaded")
-    except ImportError:
-        try:
-            from api.resume import resume_bp
-            app.register_blueprint(resume_bp)
-            print("✅ Resume blueprint loaded (alt)")
-        except ImportError as e:
-            print(f"⚠️  Could not load resume blueprint: {e}")
+    except ImportError as e:
+        print(f"⚠️  Could not load resume blueprint: {e}")
     
+    # Import and register analysis blueprint
     try:
-        from app.api.analysis import analysis_bp
+        from .api.analysis import analysis_bp
         app.register_blueprint(analysis_bp)
         print("✅ Analysis blueprint loaded")
-    except ImportError:
-        try:
-            from api.analysis import analysis_bp
-            app.register_blueprint(analysis_bp)
-            print("✅ Analysis blueprint loaded (alt)")
-        except ImportError as e:
-            print(f"⚠️  Could not load analysis blueprint: {e}")
+    except ImportError as e:
+        print(f"⚠️  Could not load analysis blueprint: {e}")
     
     # =============================================
     # SERVE FRONTEND

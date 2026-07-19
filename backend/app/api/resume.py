@@ -38,12 +38,10 @@ def upload_resume():
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
         
-        # Check file extension
         allowed = current_app.config.get('ALLOWED_EXTENSIONS', {'pdf', 'docx', 'txt'})
         if '.' not in file.filename or file.filename.rsplit('.', 1)[1].lower() not in allowed:
             return jsonify({'error': 'File type not allowed'}), 400
         
-        # Save file
         filename = secure_filename(file.filename)
         upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
@@ -100,6 +98,25 @@ def get_resume(resume_id):
             'filename': resume['filename'],
             'upload_date': resume['upload_date'],
             'skills': resume.get('skills', [])
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@resume_bp.route('/list', methods=['GET'])
+def list_resumes():
+    try:
+        app = current_app
+        resumes = list(app.resumes.values())
+        
+        return jsonify({
+            'resumes': [{
+                'id': r['id'],
+                'filename': r['filename'],
+                'upload_date': r['upload_date'],
+                'skill_count': len(r.get('skills', [])),
+                'is_processed': r.get('is_processed', False)
+            } for r in resumes]
         }), 200
         
     except Exception as e:
