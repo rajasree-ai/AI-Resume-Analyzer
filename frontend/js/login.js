@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+// Auto-detect environment - this works for both local and production
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : window.location.origin + '/api';
 
 function showLoginModal() {
     const modal = document.createElement('div');

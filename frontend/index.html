@@ -10,32 +10,45 @@
     
     <style>
         /* ============================================
-           COMPLETE STYLES
+           COMPLETE POLISHED STYLES
         ============================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        
+        /* ===== CSS VARIABLES ===== */
         :root {
             --primary: #6C63FF;
             --primary-dark: #3F37C9;
+            --primary-light: #8B83FF;
+            --primary-gradient: linear-gradient(135deg, #6C63FF, #3F37C9);
             --bg: #FFFFFF;
             --bg-secondary: #F8F9FA;
+            --bg-tertiary: #EDF2F7;
             --text: #2D3436;
             --text-secondary: #636E72;
+            --text-muted: #B2BEC3;
             --border: #E8ECF1;
             --shadow: 0 4px 20px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 40px rgba(0,0,0,0.10);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
             --radius: 12px;
+            --radius-lg: 20px;
             --radius-full: 50px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             --success: #00B894;
             --danger: #E17055;
             --warning: #FDCB6E;
+            --info: #74B9FF;
         }
 
+        /* ===== RESET ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -44,6 +57,207 @@
             padding: 0 24px;
             width: 100%;
         }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.active { display: flex; }
+
+        .loading-spinner {
+            background: var(--bg);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+        .loading-spinner .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--bg-tertiary);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        .loading-spinner p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 16px 20px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.4s ease;
+            border-left: 4px solid var(--primary);
+            transform-origin: right;
+        }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+        .toast.info { border-left-color: var(--info); }
+
+        .toast .icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .toast .content { flex: 1; }
+        .toast .title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .toast .message {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .toast .close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .toast .close:hover { color: var(--text); transform: rotate(90deg); }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            padding: 14px 32px;
+            border-radius: var(--radius-full);
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108,99,255,0.4);
+        }
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-primary .btn-loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .btn-primary.loading .btn-loader { display: block; }
+        .btn-primary.loading .btn-text { display: none; }
+        .btn-primary.loading .btn-icon { display: none; }
+
+        .btn-secondary {
+            padding: 14px 32px;
+            border-radius: var(--radius-full);
+            background: var(--bg);
+            color: var(--text);
+            font-weight: 600;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .btn-full { width: 100%; justify-content: center; }
 
         /* ===== NAVBAR ===== */
         .navbar {
@@ -54,10 +268,15 @@
             z-index: 1000;
             background: rgba(255,255,255,0.92);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
             height: 68px;
             display: flex;
             align-items: center;
+            transition: var(--transition);
+        }
+        .navbar.scrolled {
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
         }
 
         .nav-container {
@@ -82,7 +301,6 @@
             align-items: center;
             gap: 8px;
         }
-
         .nav-menu ul {
             display: flex;
             list-style: none;
@@ -97,11 +315,18 @@
             font-size: 14px;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            position: relative;
         }
-
-        .nav-link:hover { color: var(--primary); background: rgba(108,99,255,0.06); }
-        .nav-link.active { color: var(--primary); background: rgba(108,99,255,0.10); }
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(108,99,255,0.06);
+        }
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(108,99,255,0.10);
+            font-weight: 600;
+        }
 
         .btn-login {
             padding: 8px 22px;
@@ -109,15 +334,16 @@
             background: var(--primary);
             color: #fff;
             font-weight: 600;
+            font-size: 14px;
             border: none;
             cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 12px rgba(108,99,255,0.3);
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 12px rgba(108,99,255,0.3);
-            transition: all 0.3s ease;
         }
-        .btn-login:hover { transform: translateY(-2px); }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,99,255,0.4); }
 
         .theme-toggle {
             width: 38px;
@@ -128,6 +354,14 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 18px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            background: rgba(108,99,255,0.06);
+            color: var(--primary);
         }
 
         .mobile-menu-btn {
@@ -135,16 +369,31 @@
             background: none;
             border: none;
             font-size: 22px;
+            color: var(--text);
             cursor: pointer;
+            padding: 4px;
         }
 
         /* ===== HERO ===== */
         .hero-section {
-            padding: 120px 0 60px;
+            padding: 140px 0 80px;
             min-height: 100vh;
             display: flex;
             align-items: center;
             background: linear-gradient(135deg, #F8F9FA 0%, #EDF2F7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section .hero-bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(108,99,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(108,99,255,0.03) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .hero-grid {
@@ -152,75 +401,86 @@
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-content h1 {
-            font-size: 52px;
+            font-size: 56px;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 16px;
+            letter-spacing: -1px;
         }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #6C63FF, #3F37C9);
+        .hero-content h1 .gradient-text {
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
         .hero-content p {
             font-size: 18px;
             color: var(--text-secondary);
             margin-bottom: 28px;
             max-width: 520px;
+            line-height: 1.8;
         }
-
-        .hero-actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            padding: 14px 32px;
-            border-radius: var(--radius-full);
-            background: linear-gradient(135deg, #6C63FF, #3F37C9);
-            color: #fff;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover { transform: translateY(-3px); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        .btn-secondary {
-            padding: 14px 32px;
-            border-radius: var(--radius-full);
-            background: var(--bg);
-            color: var(--text);
-            font-weight: 600;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
 
         .hero-stats {
             display: flex;
             gap: 48px;
+            margin-top: 40px;
         }
-
-        .stat-number { font-size: 28px; font-weight: 800; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-number { font-size: 28px; font-weight: 800; color: var(--text); }
         .stat-number::after { content: '+'; }
-        .stat-label { font-size: 14px; color: var(--text-secondary); }
+        .stat-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-visual .visual-card {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1;
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-visual .visual-card .placeholder {
+            font-size: 80px;
+            color: var(--primary);
+            opacity: 0.15;
+        }
+        .hero-visual .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        .hero-visual .float-icon {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary);
+            animation: float 3s ease-in-out infinite;
+        }
 
         /* ===== UPLOAD ===== */
         .upload-section {
@@ -232,7 +492,6 @@
             text-align: center;
             margin-bottom: 48px;
         }
-
         .section-tag {
             display: inline-block;
             font-size: 12px;
@@ -244,14 +503,13 @@
             background: rgba(108,99,255,0.08);
             border-radius: var(--radius-full);
         }
-
         .section-header h2 {
-            font-size: 36px;
+            font-size: 40px;
             font-weight: 800;
             margin: 8px 0;
         }
         .section-header h2 .highlight { color: var(--primary); }
-        .section-header p { color: var(--text-secondary); }
+        .section-header p { color: var(--text-secondary); max-width: 500px; margin: 0 auto; }
 
         .upload-wrapper {
             display: grid;
@@ -265,16 +523,19 @@
             padding: 48px 32px;
             text-align: center;
             border: 3px dashed var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: var(--bg);
+            position: relative;
         }
-
         .upload-area:hover { border-color: var(--primary); }
-        .upload-area.dragover { border-color: var(--primary); background: rgba(108,99,255,0.05); }
-
-        .upload-icon-wrapper {
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(108,99,255,0.05);
+        }
+        .upload-area.loading { opacity: 0.6; pointer-events: none; }
+        .upload-area .upload-icon-wrapper {
             width: 72px;
             height: 72px;
             border-radius: 50%;
@@ -285,22 +546,35 @@
             font-size: 32px;
             color: var(--primary);
             margin: 0 auto 16px;
+            transition: var(--transition);
         }
-
-        .upload-formats {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin: 8px 0 16px;
+        .upload-area:hover .upload-icon-wrapper {
+            transform: scale(1.1);
+            background: rgba(108,99,255,0.12);
         }
-
-        .format-badge {
-            padding: 4px 12px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 600;
+        .upload-area .upload-progress {
+            display: none;
+            margin-top: 16px;
+        }
+        .upload-area .upload-progress.visible { display: block; }
+        .upload-area .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        .upload-area .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+        .upload-area .progress-text {
+            font-size: 13px;
             color: var(--text-secondary);
+            margin-top: 4px;
+            display: block;
         }
 
         .upload-status {
@@ -310,25 +584,8 @@
             border-radius: var(--radius);
             display: none;
         }
-        .upload-status.success { display: block; background: var(--success); color: #fff; }
-        .upload-status.error { display: block; background: var(--danger); color: #fff; }
-
-        .upload-tips {
-            padding: 24px;
-            background: var(--bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-        .upload-tips ul { list-style: none; }
-        .upload-tips li {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .upload-tips li i { color: var(--success); }
+        .upload-status.success { display: block; background: rgba(0,184,148,0.1); color: var(--success); border: 1px solid var(--success); }
+        .upload-status.error { display: block; background: rgba(225,112,85,0.1); color: var(--danger); border: 1px solid var(--danger); }
 
         /* ===== ANALYSIS ===== */
         .analysis-section {
@@ -338,18 +595,14 @@
         }
         .analysis-section.visible { display: block; }
 
-        .job-input-wrapper {
+        .job-input-card {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow);
             max-width: 800px;
             margin: 0 auto 40px;
         }
-
-        .job-input-card {
-            background: var(--bg);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-        }
-
         .job-input-card textarea {
             width: 100%;
             padding: 12px 16px;
@@ -361,39 +614,35 @@
             min-height: 120px;
             background: var(--bg-secondary);
             color: var(--text);
+            transition: var(--transition);
         }
-
         .job-input-card textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108,99,255,0.08);
         }
-
-        .job-input-card .btn-primary { margin-top: 12px; }
 
         /* ===== RESULTS ===== */
         #analysisResults { display: none; }
-        #analysisResults.visible { display: block; }
-
-        .score-overview { margin-bottom: 32px; }
+        #analysisResults.visible { display: block; animation: fadeInUp 0.6s ease; }
 
         .score-card {
             display: grid;
             grid-template-columns: 200px 1fr;
             gap: 32px;
             background: var(--bg);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             padding: 32px;
             box-shadow: var(--shadow);
             align-items: center;
+            margin-bottom: 32px;
         }
-
         .score-circle {
             position: relative;
             width: 160px;
             height: 160px;
             margin: 0 auto;
         }
-
         .score-circle svg { transform: rotate(-90deg); }
         .score-circle .bg { fill: none; stroke: var(--border); stroke-width: 8; }
         .score-circle .fill {
@@ -403,9 +652,8 @@
             stroke-linecap: round;
             stroke-dasharray: 339.3;
             stroke-dashoffset: 339.3;
-            transition: stroke-dashoffset 1s ease;
+            transition: stroke-dashoffset 1.5s ease;
         }
-
         .score-value {
             position: absolute;
             top: 50%;
@@ -413,7 +661,11 @@
             transform: translate(-50%, -50%);
             text-align: center;
         }
-        .score-value .number { display: block; font-size: 32px; font-weight: 800; }
+        .score-value .number {
+            display: block;
+            font-size: 36px;
+            font-weight: 800;
+        }
         .score-value .label { font-size: 12px; color: var(--text-secondary); }
 
         .score-details {
@@ -421,7 +673,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
-
         .score-item {
             display: flex;
             justify-content: space-between;
@@ -429,7 +680,11 @@
             border-bottom: 1px solid var(--border);
         }
         .score-item .label { color: var(--text-secondary); font-size: 14px; }
-        .score-item .value { font-weight: 700; font-size: 14px; }
+        .score-item .value {
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--transition);
+        }
         .score-item .value.high { color: var(--success); }
         .score-item .value.medium { color: var(--warning); }
         .score-item .value.low { color: var(--danger); }
@@ -440,7 +695,6 @@
             gap: 24px;
             margin-bottom: 32px;
         }
-
         .skill-card {
             background: var(--bg);
             border-radius: var(--radius);
@@ -474,7 +728,6 @@
             flex-wrap: wrap;
             gap: 6px;
         }
-
         .skill-tag {
             padding: 4px 12px;
             border-radius: var(--radius-full);
@@ -494,8 +747,9 @@
             border-radius: var(--radius);
             margin-bottom: 8px;
             align-items: center;
+            transition: var(--transition);
         }
-
+        .recommendation-item:hover { transform: translateX(4px); }
         .recommendation-item .icon {
             width: 36px;
             height: 36px;
@@ -507,7 +761,6 @@
             color: var(--primary);
             flex-shrink: 0;
         }
-
         .recommendation-item .content { flex: 1; }
         .recommendation-item .content h4 { font-size: 14px; }
         .recommendation-item .content p { font-size: 13px; color: var(--text-secondary); }
@@ -540,7 +793,6 @@
             overflow: hidden;
             box-shadow: var(--shadow);
         }
-
         .dashboard-card .card-header {
             padding: 16px 20px;
             border-bottom: 1px solid var(--border);
@@ -560,7 +812,6 @@
             gap: 16px;
             text-align: center;
         }
-
         .dashboard-stat .number {
             font-size: 28px;
             font-weight: 800;
@@ -577,6 +828,7 @@
         }
         .achievement-item:last-child { border-bottom: none; }
         .achievement-item i { color: var(--warning); font-size: 18px; }
+        .achievement-item.completed { opacity: 1; }
         .achievement-item.completed i { color: var(--success); }
         .achievement-item.locked { opacity: 0.5; }
 
@@ -585,20 +837,17 @@
             padding: 80px 0;
             background: var(--bg-secondary);
         }
-
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: center;
         }
-
         .about-features {
             display: grid;
             gap: 16px;
             margin-top: 24px;
         }
-
         .about-feature {
             display: flex;
             gap: 12px;
@@ -610,12 +859,11 @@
 
         .about-card {
             background: var(--bg);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             padding: 40px;
             box-shadow: var(--shadow-lg);
             text-align: center;
         }
-
         .about-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -623,52 +871,6 @@
         }
         .about-stat .number { font-size: 28px; font-weight: 800; color: var(--primary); }
         .about-stat .label { font-size: 13px; color: var(--text-secondary); }
-
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            padding: 14px 20px;
-            background: var(--bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 280px;
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid var(--primary);
-        }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.info { border-left-color: #74B9FF; }
-
-        .toast .icon { font-size: 20px; flex-shrink: 0; }
-        .toast .content { flex: 1; }
-        .toast .title { font-weight: 600; font-size: 14px; }
-        .toast .message { font-size: 13px; color: var(--text-secondary); }
-        .toast .close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
 
         /* ===== AUTH MODAL ===== */
         .modal-overlay {
@@ -684,23 +886,19 @@
             align-items: center;
             justify-content: center;
         }
-
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-container {
             background: var(--bg);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             padding: 40px;
             max-width: 440px;
             width: 90%;
             position: relative;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
             max-height: 90vh;
             overflow-y: auto;
         }
-
         .modal-close {
             position: absolute;
             top: 16px;
@@ -712,40 +910,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        .modal-close:hover { color: var(--text); transform: rotate(90deg); }
 
-        .modal-close:hover {
-            color: var(--text);
-            transform: rotate(90deg);
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
 
         .auth-header {
             text-align: center;
             margin-bottom: 24px;
         }
-
-        .auth-header h2 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .auth-header p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
+        .auth-header h2 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+        .auth-header p { color: var(--text-secondary); font-size: 14px; }
 
         .form-group {
             margin-bottom: 16px;
         }
-
         .form-group label {
             display: block;
             font-weight: 500;
@@ -753,7 +932,6 @@
             margin-bottom: 4px;
             color: var(--text-secondary);
         }
-
         .form-group input {
             width: 100%;
             padding: 10px 14px;
@@ -764,7 +942,6 @@
             color: var(--text);
             transition: all 0.3s ease;
         }
-
         .form-group input:focus {
             outline: none;
             border-color: var(--primary);
@@ -778,19 +955,12 @@
             margin: 12px 0 20px;
             font-size: 14px;
         }
-
         .checkbox-label {
             display: flex;
             align-items: center;
             gap: 8px;
             color: var(--text-secondary);
             cursor: pointer;
-        }
-
-        .btn-full {
-            width: 100%;
-            justify-content: center;
-            padding: 12px;
         }
 
         .auth-footer {
@@ -801,22 +971,18 @@
             font-size: 14px;
             color: var(--text-secondary);
         }
-
-        .auth-footer a {
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
+        .auth-footer a { color: var(--primary); font-weight: 600; cursor: pointer; }
+        .auth-footer a:hover { text-decoration: underline; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .hero-grid, .about-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+            .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
             .hero-content p { margin: 0 auto 28px; }
-            .hero-actions, .hero-stats { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .upload-wrapper { grid-template-columns: 1fr; }
+            .score-card { grid-template-columns: 1fr; text-align: center; }
+            .score-details { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; text-align: center; }
             .about-feature { flex-direction: column; align-items: center; text-align: center; }
         }
 
@@ -828,25 +994,27 @@
                 left: 0;
                 right: 0;
                 background: rgba(255,255,255,0.98);
+                backdrop-filter: blur(20px);
                 flex-direction: column;
                 padding: 16px 20px 24px;
                 box-shadow: var(--shadow-lg);
                 transform: translateY(-120%);
                 transition: transform 0.35s ease;
+                border-bottom: 1px solid var(--border);
             }
             .nav-menu.active { transform: translateY(0); }
             .nav-menu ul { flex-direction: column; width: 100%; }
             .nav-link { width: 100%; text-align: center; padding: 12px 16px; }
-
-            .upload-wrapper { grid-template-columns: 1fr; }
-            .skill-grid { grid-template-columns: 1fr; }
-            .score-card { grid-template-columns: 1fr; text-align: center; }
-            .score-details { grid-template-columns: 1fr; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .about-stats { grid-template-columns: 1fr; }
+            .nav-actions { width: 100%; justify-content: center; padding-top: 12px; border-top: 1px solid var(--border); }
 
             .hero-content h1 { font-size: 36px; }
             .section-header h2 { font-size: 28px; }
+            .hero-stats { gap: 24px; flex-wrap: wrap; }
+            .stat-number { font-size: 22px; }
+            .score-card { padding: 20px; }
+            .skill-grid { grid-template-columns: 1fr; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .about-stats { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 480px) {
@@ -854,21 +1022,27 @@
             .hero-actions { flex-direction: column; width: 100%; }
             .hero-actions .btn-primary,
             .hero-actions .btn-secondary { width: 100%; justify-content: center; }
-            .hero-stats { flex-direction: column; align-items: center; gap: 8px; }
+            .hero-stats { flex-direction: column; gap: 8px; align-items: center; }
             .stat-item { align-items: center; }
+            .brand-text { font-size: 18px; }
         }
 
         /* ===== DARK MODE ===== */
         [data-theme="dark"] {
             --bg: #1A1A2E;
             --bg-secondary: #16213E;
+            --bg-tertiary: #1A1A3E;
             --text: #E8E8E8;
             --text-secondary: #A0A0B8;
+            --text-muted: #6B6B84;
             --border: rgba(255,255,255,0.06);
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.5);
         }
-
         [data-theme="dark"] .navbar {
             background: rgba(26,26,46,0.95);
+            border-bottom-color: rgba(255,255,255,0.06);
         }
         [data-theme="dark"] .brand-text { color: #E8E8E8; }
         [data-theme="dark"] .hero-section {
@@ -877,23 +1051,32 @@
         [data-theme="dark"] .nav-menu {
             background: rgba(26,26,46,0.98);
         }
-        [data-theme="dark"] .upload-tips,
+        [data-theme="dark"] .upload-area,
         [data-theme="dark"] .job-input-card,
         [data-theme="dark"] .score-card,
         [data-theme="dark"] .skill-card,
+        [data-theme="dark"] .visual-card,
         [data-theme="dark"] .about-card,
-        [data-theme="dark"] .dashboard-card {
+        [data-theme="dark"] .dashboard-card,
+        [data-theme="dark"] .modal-container {
             background: var(--bg-secondary);
         }
-        [data-theme="dark"] .modal-container {
+        [data-theme="dark"] .toast,
+        [data-theme="dark"] .loading-spinner {
             background: var(--bg-secondary);
         }
     </style>
 </head>
 <body>
-    <!-- ==========================================
-    NAVBAR
-    ========================================== -->
+    <!-- ===== LOADING OVERLAY ===== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -924,13 +1107,13 @@
         </div>
     </nav>
 
-    <!-- ==========================================
-    HERO SECTION
-    ========================================== -->
+    <!-- ===== HERO SECTION ===== -->
     <section id="home" class="hero-section">
+        <div class="hero-bg-pattern"></div>
         <div class="container">
             <div class="hero-grid">
                 <div class="hero-content">
+                    <div class="section-tag" style="margin-bottom:16px;">🚀 AI-Powered Career Tool</div>
                     <h1>
                         Bridge the <span class="gradient-text">Skill Gap</span><br>
                         Land Your Dream <span class="gradient-text">Job</span>
@@ -963,17 +1146,21 @@
                     </div>
                 </div>
                 <div class="hero-visual">
-                    <div style="width:100%; max-width:450px; aspect-ratio:1; background:var(--bg); border-radius:var(--radius); box-shadow:var(--shadow-lg); display:flex; align-items:center; justify-content:center; font-size:80px; color:var(--primary); opacity:0.15;">
-                        <i class="fas fa-file-alt"></i>
+                    <div class="visual-card">
+                        <div class="placeholder"><i class="fas fa-file-alt"></i></div>
+                        <div class="floating-icons">
+                            <span class="float-icon" style="top:10%;left:10%;animation-delay:0s;"><i class="fas fa-python"></i></span>
+                            <span class="float-icon" style="top:15%;right:15%;animation-delay:1s;"><i class="fas fa-code"></i></span>
+                            <span class="float-icon" style="bottom:20%;left:15%;animation-delay:2s;"><i class="fas fa-brain"></i></span>
+                            <span class="float-icon" style="bottom:15%;right:10%;animation-delay:0.5s;"><i class="fas fa-robot"></i></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==========================================
-    UPLOAD SECTION
-    ========================================== -->
+    <!-- ===== UPLOAD SECTION ===== -->
     <section id="upload" class="upload-section">
         <div class="container">
             <div class="section-header">
@@ -987,28 +1174,28 @@
                         <div class="upload-icon-wrapper"><i class="fas fa-cloud-upload-alt"></i></div>
                         <h3>Drop your resume here</h3>
                         <p>Supports PDF, DOCX, and TXT files up to 16MB</p>
-                        <div class="upload-formats">
-                            <span class="format-badge">PDF</span>
-                            <span class="format-badge">DOCX</span>
-                            <span class="format-badge">TXT</span>
+                        <div class="upload-formats" style="display:flex; gap:8px; justify-content:center; margin:8px 0 16px;">
+                            <span class="format-badge" style="padding:4px 12px; background:var(--bg-secondary); border-radius:var(--radius-full); font-size:12px; font-weight:600; color:var(--text-secondary);">PDF</span>
+                            <span class="format-badge" style="padding:4px 12px; background:var(--bg-secondary); border-radius:var(--radius-full); font-size:12px; font-weight:600; color:var(--text-secondary);">DOCX</span>
+                            <span class="format-badge" style="padding:4px 12px; background:var(--bg-secondary); border-radius:var(--radius-full); font-size:12px; font-weight:600; color:var(--text-secondary);">TXT</span>
                         </div>
                         <button class="btn-primary" id="uploadBtn"><i class="fas fa-folder-open"></i> Browse Files</button>
                         <input type="file" id="fileInput" accept=".pdf,.docx,.txt" hidden />
-                        <div id="uploadProgress" style="display:none; margin-top:16px;">
-                            <div style="width:100%; height:4px; background:var(--border); border-radius:50px; overflow:hidden;">
-                                <div id="progressBar" style="width:0%; height:100%; background:var(--primary); transition:width 0.3s ease;"></div>
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressBar"></div>
                             </div>
-                            <span style="font-size:13px; color:var(--text-secondary);">Uploading...</span>
+                            <span class="progress-text" id="progressText">Uploading...</span>
                         </div>
                     </div>
                 </div>
-                <div class="upload-tips">
-                    <h4><i class="fas fa-lightbulb"></i> Pro Tips</h4>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Use a clear file name</li>
-                        <li><i class="fas fa-check-circle"></i> Include a professional summary</li>
-                        <li><i class="fas fa-check-circle"></i> List your skills clearly</li>
-                        <li><i class="fas fa-check-circle"></i> Keep it to 1-2 pages</li>
+                <div class="upload-tips" style="padding:24px; background:var(--bg); border-radius:var(--radius); box-shadow:var(--shadow);">
+                    <h4 style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:16px;"><i class="fas fa-lightbulb" style="color:var(--warning);"></i> Pro Tips</h4>
+                    <ul style="list-style:none;">
+                        <li style="display:flex; align-items:center; gap:8px; padding:4px 0; font-size:14px; color:var(--text-secondary);"><i class="fas fa-check-circle" style="color:var(--success);"></i> Use a clear file name</li>
+                        <li style="display:flex; align-items:center; gap:8px; padding:4px 0; font-size:14px; color:var(--text-secondary);"><i class="fas fa-check-circle" style="color:var(--success);"></i> Include a professional summary</li>
+                        <li style="display:flex; align-items:center; gap:8px; padding:4px 0; font-size:14px; color:var(--text-secondary);"><i class="fas fa-check-circle" style="color:var(--success);"></i> List your skills clearly</li>
+                        <li style="display:flex; align-items:center; gap:8px; padding:4px 0; font-size:14px; color:var(--text-secondary);"><i class="fas fa-check-circle" style="color:var(--success);"></i> Keep it to 1-2 pages</li>
                     </ul>
                 </div>
             </div>
@@ -1016,9 +1203,7 @@
         </div>
     </section>
 
-    <!-- ==========================================
-    ANALYSIS SECTION
-    ========================================== -->
+    <!-- ===== ANALYSIS SECTION ===== -->
     <section id="analysis" class="analysis-section">
         <div class="container">
             <div class="section-header">
@@ -1027,18 +1212,19 @@
                 <p>Comprehensive analysis of your resume against the job requirements</p>
             </div>
             
-            <div class="job-input-wrapper">
-                <div class="job-input-card">
-                    <h3><i class="fas fa-briefcase"></i> Job Description</h3>
-                    <textarea id="jobDescription" placeholder="Paste the job description here to analyze against your resume..." rows="5"></textarea>
-                    <button class="btn-primary" id="analyzeBtn" onclick="analyzeResume()">
-                        <i class="fas fa-robot"></i> Analyze
-                    </button>
-                </div>
+            <div class="job-input-card">
+                <h3 style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:18px;"><i class="fas fa-briefcase" style="color:var(--primary);"></i> Job Description</h3>
+                <textarea id="jobDescription" placeholder="Paste the job description here to analyze against your resume..." rows="5"></textarea>
+                <button class="btn-primary" id="analyzeBtn" onclick="analyzeResume()" style="margin-top:12px;">
+                    <span class="btn-icon"><i class="fas fa-robot"></i></span>
+                    <span class="btn-text">Analyze</span>
+                    <span class="btn-loader"></span>
+                </button>
             </div>
             
             <div id="analysisResults">
-                <div class="score-overview">
+                <!-- Score Overview -->
+                <div class="score-overview" style="margin-bottom:32px;">
                     <div class="score-card">
                         <div class="score-circle">
                             <svg viewBox="0 0 120 120">
@@ -1059,6 +1245,7 @@
                     </div>
                 </div>
                 
+                <!-- Skill Analysis -->
                 <div class="skill-grid">
                     <div class="skill-card matching">
                         <div class="skill-header">
@@ -1078,11 +1265,13 @@
                     </div>
                 </div>
                 
+                <!-- Recommendations -->
                 <div style="margin-bottom:16px;">
-                    <h3 style="font-size:20px;"><i class="fas fa-graduation-cap"></i> Learning Recommendations</h3>
+                    <h3 style="font-size:20px;"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> Learning Recommendations</h3>
                 </div>
                 <div id="recommendedCourses"></div>
                 
+                <!-- Export -->
                 <div class="export-section">
                     <button class="btn-secondary" onclick="exportReport()"><i class="fas fa-file-pdf"></i> Export Report</button>
                     <button class="btn-secondary" onclick="exportJSON()"><i class="fas fa-file-code"></i> Export JSON</button>
@@ -1091,9 +1280,7 @@
         </div>
     </section>
 
-    <!-- ==========================================
-    DASHBOARD SECTION
-    ========================================== -->
+    <!-- ===== DASHBOARD SECTION ===== -->
     <section id="dashboard" class="dashboard-section">
         <div class="container">
             <div class="section-header">
@@ -1138,9 +1325,7 @@
         </div>
     </section>
 
-    <!-- ==========================================
-    ABOUT SECTION
-    ========================================== -->
+    <!-- ===== ABOUT SECTION ===== -->
     <section id="about" class="about-section">
         <div class="container">
             <div class="about-grid">
@@ -1196,9 +1381,7 @@
         </div>
     </section>
 
-    <!-- ==========================================
-    AUTH MODAL
-    ========================================== -->
+    <!-- ===== AUTH MODAL ===== -->
     <div class="modal-overlay" id="authModal">
         <div class="modal-container">
             <button class="modal-close" id="closeAuthModal">&times;</button>
@@ -1295,19 +1478,25 @@
         </div>
     </div>
 
-    <!-- ==========================================
-    TOAST CONTAINER
-    ========================================== -->
+    <!-- ===== TOAST CONTAINER ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ==========================================
-    SCRIPTS
+    COMPLETE SCRIPTS WITH UI/UX ENHANCEMENTS
     ========================================== -->
     <script>
         // =============================================
-        // CONFIGURATION
+        // 🔥 CRITICAL FIX: Auto-detect API URL
         // =============================================
-        const API_BASE_URL = 'http://localhost:5000/api';
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000/api'
+            : window.location.origin + '/api';
+        
+        console.log('🔗 API URL:', API_BASE_URL);
+
+        // =============================================
+        // STATE
+        // =============================================
         let currentResumeId = null;
         let currentResumeData = null;
         let currentAnalysisData = null;
@@ -1320,11 +1509,10 @@
         // =============================================
         // TOAST SYSTEM
         // =============================================
-        function showToast(message, type = 'info', duration = 3000) {
+        function showToast(message, type = 'info', duration = 4000) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-
             const icons = {
                 success: 'fas fa-check-circle',
                 error: 'fas fa-exclamation-circle',
@@ -1337,7 +1525,6 @@
                 warning: '#FDCB6E',
                 info: '#74B9FF'
             };
-
             toast.innerHTML = `
                 <div class="icon" style="color:${colors[type] || colors.info}">
                     <i class="${icons[type] || icons.info}"></i>
@@ -1348,16 +1535,35 @@
                 </div>
                 <button class="close"><i class="fas fa-times"></i></button>
             `;
-
             container.appendChild(toast);
             const timer = setTimeout(() => toast.remove(), duration);
             toast.querySelector('.close').addEventListener('click', () => {
                 clearTimeout(timer);
                 toast.remove();
             });
+            // Click on toast to dismiss
+            toast.addEventListener('click', (e) => {
+                if (e.target.closest('.close')) return;
+                clearTimeout(timer);
+                toast.remove();
+            });
+        }
+        window.showToast = showToast;
+
+        // =============================================
+        // LOADING OVERLAY
+        // =============================================
+        function showLoading(message = 'Processing...') {
+            const overlay = document.getElementById('loadingOverlay');
+            document.getElementById('loadingText').textContent = message;
+            overlay.classList.add('active');
         }
 
-        window.showToast = showToast;
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+        window.showLoading = showLoading;
+        window.hideLoading = hideLoading;
 
         // =============================================
         // NAVBAR
@@ -1406,289 +1612,50 @@
         });
 
         // =============================================
-        // AUTH - MODAL CONTROLS
+        // MODAL CONTROLS
         // =============================================
-        const authModal = document.getElementById('authModal');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const resetForm = document.getElementById('resetForm');
-
         function openAuthModal() {
-            authModal.classList.add('active');
-            showLogin();
+            const modal = document.getElementById('authModal');
+            if (modal) { modal.classList.add('active'); showLogin(); }
         }
 
         function closeAuthModal() {
-            authModal.classList.remove('active');
+            const modal = document.getElementById('authModal');
+            if (modal) modal.classList.remove('active');
         }
 
         function showLogin() {
-            loginForm.classList.add('active');
-            registerForm.classList.remove('active');
-            resetForm.classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('resetForm').classList.remove('active');
         }
 
         function showRegister() {
-            registerForm.classList.add('active');
-            loginForm.classList.remove('active');
-            resetForm.classList.remove('active');
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('resetForm').classList.remove('active');
         }
 
         function showResetPassword() {
-            resetForm.classList.add('active');
-            loginForm.classList.remove('active');
-            registerForm.classList.remove('active');
+            document.getElementById('resetForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
         }
 
-        // Close modal on outside click
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                closeAuthModal();
+        // Modal event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('authModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeAuthModal();
+                });
             }
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeAuthModal();
+            });
+            const closeBtn = document.getElementById('closeAuthModal');
+            if (closeBtn) closeBtn.addEventListener('click', closeAuthModal);
         });
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && authModal.classList.contains('active')) {
-                closeAuthModal();
-            }
-        });
-
-        // Close button
-        document.getElementById('closeAuthModal').addEventListener('click', closeAuthModal);
-
-        // =============================================
-        // AUTH - REGISTER
-        // =============================================
-        async function registerUser() {
-            const username = document.getElementById('registerUsername').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const fullName = document.getElementById('registerFullName').value.trim();
-
-            if (!username || !email || !password) {
-                showToast('Please fill in all required fields', 'warning');
-                return;
-            }
-
-            if (password.length < 6) {
-                showToast('Password must be at least 6 characters', 'warning');
-                return;
-            }
-
-            const btn = document.querySelector('#registerForm .btn-full');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        email,
-                        password,
-                        full_name: fullName
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Registration failed');
-                }
-
-                if (data.token) {
-                    localStorage.setItem('authToken', data.token);
-                    authToken = data.token;
-                    currentUser = data.user;
-                    updateUIForLoggedInUser();
-                    closeAuthModal();
-                    showToast('Registration successful! Welcome ' + data.user.username, 'success');
-                }
-
-            } catch (error) {
-                showToast('Registration failed: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        window.registerUser = registerUser;
-
-        // =============================================
-        // AUTH - LOGIN
-        // =============================================
-        async function loginUser() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const remember = document.getElementById('rememberMe').checked;
-
-            if (!email || !password) {
-                showToast('Please enter email and password', 'warning');
-                return;
-            }
-
-            const btn = document.querySelector('#loginForm .btn-full');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                        remember
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Login failed');
-                }
-
-                if (data.token) {
-                    localStorage.setItem('authToken', data.token);
-                    authToken = data.token;
-                    currentUser = data.user;
-                    updateUIForLoggedInUser();
-                    closeAuthModal();
-                    showToast('Welcome back, ' + data.user.username + '!', 'success');
-                }
-
-            } catch (error) {
-                showToast('Login failed: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        window.loginUser = loginUser;
-
-        // =============================================
-        // AUTH - RESET PASSWORD
-        // =============================================
-        async function resetPassword() {
-            const email = document.getElementById('resetEmail').value.trim();
-
-            if (!email) {
-                showToast('Please enter your email', 'warning');
-                return;
-            }
-
-            const btn = document.querySelector('#resetForm .btn-full');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/reset-password-request`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Request failed');
-                }
-
-                showToast('Check your email for reset link', 'success');
-                showLogin();
-
-            } catch (error) {
-                showToast('Error: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        window.resetPassword = resetPassword;
-
-        // =============================================
-        // AUTH - LOGOUT
-        // =============================================
-        function logoutUser() {
-            localStorage.removeItem('authToken');
-            authToken = null;
-            currentUser = null;
-            updateUIForLoggedOutUser();
-            showToast('Logged out successfully', 'info');
-        }
-
-        window.logoutUser = logoutUser;
-
-        // =============================================
-        // AUTH - CHECK STATUS
-        // =============================================
-        async function checkAuth() {
-            if (!authToken) {
-                updateUIForLoggedOutUser();
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Session expired');
-                }
-
-                const data = await response.json();
-                currentUser = data.user;
-                updateUIForLoggedInUser();
-
-            } catch (error) {
-                localStorage.removeItem('authToken');
-                authToken = null;
-                currentUser = null;
-                updateUIForLoggedOutUser();
-            }
-        }
-
-        // =============================================
-        // AUTH - UI UPDATE
-        // =============================================
-        function updateUIForLoggedInUser() {
-            const loginBtn = document.getElementById('loginBtn');
-            if (loginBtn && currentUser) {
-                loginBtn.innerHTML = `<i class="fas fa-user-check"></i> ${currentUser.username}`;
-                loginBtn.className = 'btn-login';
-                loginBtn.onclick = () => {
-                    if (confirm(`Logout ${currentUser.username}?`)) {
-                        logoutUser();
-                    }
-                };
-            }
-        }
-
-        function updateUIForLoggedOutUser() {
-            const loginBtn = document.getElementById('loginBtn');
-            if (loginBtn) {
-                loginBtn.innerHTML = '<i class="fas fa-user"></i> Sign In';
-                loginBtn.className = 'btn-login';
-                loginBtn.onclick = () => openAuthModal();
-            }
-        }
 
         // =============================================
         // SCROLL FUNCTIONS
@@ -1734,12 +1701,223 @@
             });
 
             const firstStat = document.getElementById('stat1');
-            if (firstStat) {
-                observer.observe(firstStat.closest('.stat-item'));
+            if (firstStat) observer.observe(firstStat.closest('.stat-item'));
+        }
+        setTimeout(animateCounters, 500);
+
+        // =============================================
+        // AUTH - REGISTER
+        // =============================================
+        async function registerUser() {
+            const username = document.getElementById('registerUsername')?.value?.trim() || '';
+            const email = document.getElementById('registerEmail')?.value?.trim() || '';
+            const password = document.getElementById('registerPassword')?.value || '';
+            const fullName = document.getElementById('registerFullName')?.value?.trim() || '';
+
+            // Validation
+            if (!username || !email || !password) {
+                showToast('Please fill in all required fields', 'warning');
+                return;
+            }
+            if (username.length < 3) {
+                showToast('Username must be at least 3 characters', 'warning');
+                return;
+            }
+            if (!email.includes('@') || !email.includes('.')) {
+                showToast('Please enter a valid email address', 'warning');
+                return;
+            }
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'warning');
+                return;
+            }
+
+            const btn = document.querySelector('#registerForm .btn-full');
+            if (!btn) return;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+            try {
+                const url = `${API_BASE_URL}/auth/register`;
+                console.log('📤 Sending registration to:', url);
+                
+                showLoading('Creating your account...');
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password, full_name: fullName })
+                });
+
+                const data = await response.json();
+                console.log('📥 Registration response:', data);
+
+                if (!response.ok) throw new Error(data.error || 'Registration failed');
+
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                    authToken = data.token;
+                    currentUser = data.user;
+                    updateUIForLoggedInUser();
+                    closeAuthModal();
+                    hideLoading();
+                    showToast('🎉 Registration successful! Welcome ' + data.user.username, 'success');
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('dashboard').classList.add('visible');
+                }
+
+            } catch (error) {
+                hideLoading();
+                console.error('❌ Registration error:', error);
+                showToast('Registration failed: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        window.registerUser = registerUser;
+
+        // =============================================
+        // AUTH - LOGIN
+        // =============================================
+        async function loginUser() {
+            const email = document.getElementById('loginEmail')?.value?.trim() || '';
+            const password = document.getElementById('loginPassword')?.value || '';
+
+            if (!email || !password) {
+                showToast('Please enter email and password', 'warning');
+                return;
+            }
+
+            const btn = document.querySelector('#loginForm .btn-full');
+            if (!btn) return;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+            try {
+                const url = `${API_BASE_URL}/auth/login`;
+                console.log('📤 Sending login to:', url);
+                
+                showLoading('Signing you in...');
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                console.log('📥 Login response:', data);
+
+                if (!response.ok) throw new Error(data.error || 'Login failed');
+
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                    authToken = data.token;
+                    currentUser = data.user;
+                    updateUIForLoggedInUser();
+                    closeAuthModal();
+                    hideLoading();
+                    showToast('👋 Welcome back, ' + data.user.username + '!', 'success');
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('dashboard').classList.add('visible');
+                }
+
+            } catch (error) {
+                hideLoading();
+                console.error('❌ Login error:', error);
+                showToast('Login failed: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        window.loginUser = loginUser;
+
+        // =============================================
+        // AUTH - RESET PASSWORD
+        // =============================================
+        async function resetPassword() {
+            const email = document.getElementById('resetEmail')?.value?.trim() || '';
+            if (!email) {
+                showToast('Please enter your email', 'warning');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/reset-password-request`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Request failed');
+                showToast('📧 Check your email for reset link', 'success');
+                showLogin();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+        window.resetPassword = resetPassword;
+
+        // =============================================
+        // AUTH - LOGOUT
+        // =============================================
+        function logoutUser() {
+            localStorage.removeItem('authToken');
+            authToken = null;
+            currentUser = null;
+            updateUIForLoggedOutUser();
+            showToast('👋 Logged out successfully', 'info');
+        }
+        window.logoutUser = logoutUser;
+
+        // =============================================
+        // AUTH - CHECK STATUS
+        // =============================================
+        async function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                updateUIForLoggedOutUser();
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Session expired');
+                const data = await response.json();
+                currentUser = data.user;
+                updateUIForLoggedInUser();
+            } catch (error) {
+                localStorage.removeItem('authToken');
+                authToken = null;
+                currentUser = null;
+                updateUIForLoggedOutUser();
             }
         }
 
-        setTimeout(animateCounters, 500);
+        // =============================================
+        // AUTH - UI UPDATE
+        // =============================================
+        function updateUIForLoggedInUser() {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn && currentUser) {
+                loginBtn.innerHTML = `<i class="fas fa-user-check"></i> ${currentUser.username}`;
+                loginBtn.onclick = () => {
+                    if (confirm(`Logout ${currentUser.username}?`)) logoutUser();
+                };
+            }
+        }
+
+        function updateUIForLoggedOutUser() {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.innerHTML = '<i class="fas fa-user"></i> Sign In';
+                loginBtn.onclick = () => openAuthModal();
+            }
+        }
 
         // =============================================
         // FILE UPLOAD
@@ -1750,6 +1928,7 @@
         const uploadStatus = document.getElementById('uploadStatus');
         const progressBar = document.getElementById('progressBar');
         const uploadProgress = document.getElementById('uploadProgress');
+        const progressText = document.getElementById('progressText');
 
         uploadBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1781,7 +1960,7 @@
             if (file) handleFileUpload(file);
         });
 
-        function handleFileUpload(file) {
+        async function handleFileUpload(file) {
             const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
             if (!validTypes.includes(file.type) && !file.name.match(/\.(pdf|docx|txt)$/i)) {
                 showToast('Please upload a PDF, DOCX, or TXT file', 'error');
@@ -1793,119 +1972,72 @@
                 return;
             }
 
-            uploadProgress.style.display = 'block';
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += 10;
-                if (progress <= 90) {
-                    progressBar.style.width = progress + '%';
-                }
-            }, 100);
+            uploadArea.classList.add('loading');
+            uploadProgress.classList.add('visible');
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Uploading...';
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
+            const formData = new FormData();
+            formData.append('resume', file);
+
+            try {
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    if (progress <= 90) {
+                        progressBar.style.width = progress + '%';
+                    }
+                }, 100);
+
+                showLoading('Uploading your resume...');
+
+                const response = await fetch(`${API_BASE_URL}/resume/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
                 clearInterval(progressInterval);
                 progressBar.style.width = '100%';
-                
-                const fileName = file.name.toLowerCase();
-                let resumeText = e.target.result || '';
-                
-                let extractedSkills = [];
-                
-                if (file.type === 'text/plain' || fileName.endsWith('.txt')) {
-                    extractedSkills = extractSkillsFromText(resumeText);
-                }
-                
-                if (extractedSkills.length === 0) {
-                    const skillMap = {
-                        'python': ['Python', 'Django', 'Flask', 'Pandas', 'NumPy'],
-                        'java': ['Java', 'Spring', 'Maven', 'JUnit', 'Hibernate'],
-                        'javascript': ['JavaScript', 'React', 'Node.js', 'Express', 'MongoDB'],
-                        'react': ['React', 'Redux', 'JavaScript', 'HTML', 'CSS'],
-                        'data': ['Python', 'SQL', 'Pandas', 'Tableau', 'Power BI'],
-                        'fullstack': ['JavaScript', 'React', 'Node.js', 'SQL', 'Git'],
-                        'devops': ['Docker', 'Kubernetes', 'AWS', 'Jenkins', 'Git'],
-                        'cloud': ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes'],
-                        'ai': ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'Machine Learning'],
-                        'ml': ['Python', 'Scikit-learn', 'TensorFlow', 'Statistics', 'Data Analysis']
-                    };
-                    
-                    let found = false;
-                    for (const [key, skills] of Object.entries(skillMap)) {
-                        if (fileName.includes(key)) {
-                            extractedSkills = skills;
-                            found = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!found) {
-                        extractedSkills = ['Python', 'JavaScript', 'SQL', 'Git', 'React', 'Node.js', 'Docker', 'AWS'];
-                    }
-                }
-                
-                currentResumeData = {
-                    text: resumeText,
-                    skills: extractedSkills,
-                    fileName: file.name,
-                    fileSize: (file.size / 1024 / 1024).toFixed(2) + ' MB'
-                };
-                
-                currentResumeId = Date.now();
+                progressText.textContent = 'Complete!';
+
+                if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+                currentResumeId = data.resume_id;
+                currentResumeData = data.parsed_data;
                 resumeCount++;
                 document.getElementById('dashResumes').textContent = resumeCount;
 
                 uploadStatus.className = 'upload-status success';
-                uploadStatus.textContent = `✅ "${file.name}" uploaded! Found ${extractedSkills.length} skills`;
+                uploadStatus.textContent = `✅ "${file.name}" uploaded successfully! Found ${data.parsed_data?.skill_count || 0} skills`;
                 uploadStatus.style.display = 'block';
 
-                showToast(`"${file.name}" uploaded successfully! ${extractedSkills.length} skills detected`, 'success');
+                hideLoading();
+                showToast(`✅ "${file.name}" uploaded successfully!`, 'success');
 
                 document.getElementById('analysis').classList.add('visible');
                 document.getElementById('analysis').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+                document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('dashboard').classList.add('visible');
 
+            } catch (error) {
+                hideLoading();
+                uploadStatus.className = 'upload-status error';
+                uploadStatus.textContent = `❌ Error: ${error.message}`;
+                uploadStatus.style.display = 'block';
+                showToast('Upload failed: ' + error.message, 'error');
+            } finally {
+                uploadArea.classList.remove('loading');
                 setTimeout(() => {
-                    uploadProgress.style.display = 'none';
+                    uploadProgress.classList.remove('visible');
                 }, 2000);
-            };
-            
-            if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-                reader.readAsText(file);
-            } else {
-                reader.readAsText(new Blob(['']));
             }
-        }
-
-        // =============================================
-        // SKILL EXTRACTION
-        // =============================================
-        function extractSkillsFromText(text) {
-            const skills = [];
-            const commonSkills = [
-                'python', 'java', 'javascript', 'react', 'angular', 'vue', 'node.js', 'html', 'css',
-                'sql', 'mongodb', 'postgresql', 'mysql', 'docker', 'kubernetes', 'aws', 'azure', 'gcp',
-                'git', 'github', 'ci/cd', 'jenkins', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas',
-                'numpy', 'django', 'flask', 'spring', 'c++', 'c#', 'ruby', 'php', 'swift', 'kotlin',
-                'go', 'rust', 'typescript', 'graphql', 'rest api', 'microservices', 'agile', 'scrum',
-                'leadership', 'communication', 'teamwork', 'problem-solving'
-            ];
-            
-            const textLower = text.toLowerCase();
-            for (const skill of commonSkills) {
-                if (textLower.includes(skill)) {
-                    skills.push(skill.charAt(0).toUpperCase() + skill.slice(1));
-                }
-            }
-            
-            return skills;
         }
 
         // =============================================
         // ANALYSIS
         // =============================================
-        function analyzeResume() {
+        async function analyzeResume() {
             const jobDesc = document.getElementById('jobDescription').value.trim();
             
             if (!jobDesc) {
@@ -1913,63 +2045,35 @@
                 return;
             }
 
-            if (!currentResumeData) {
+            if (!currentResumeId) {
                 showToast('Please upload a resume first', 'warning');
                 return;
             }
 
             const btn = document.getElementById('analyzeBtn');
+            btn.classList.add('loading');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
 
-            setTimeout(() => {
-                const jobSkills = extractSkillsFromText(jobDesc);
-                const resumeSkills = currentResumeData.skills || [];
-                
-                const resumeSkillsLower = resumeSkills.map(s => s.toLowerCase());
-                const jobSkillsLower = jobSkills.map(s => s.toLowerCase());
-                
-                const matching = resumeSkillsLower.filter(s => jobSkillsLower.includes(s));
-                const matchingDisplay = resumeSkills.filter(s => jobSkillsLower.includes(s.toLowerCase()));
-                
-                const missing = jobSkillsLower.filter(s => !resumeSkillsLower.includes(s));
-                const missingDisplay = jobSkills.filter(s => !resumeSkillsLower.includes(s.toLowerCase()));
-                
-                const totalJobSkills = jobSkills.length || 1;
-                const overallScore = Math.round((matching.length / totalJobSkills) * 100);
-                const atsScore = Math.round(overallScore * 0.85 + 10);
-                const experienceMatch = Math.round(Math.random() * 30 + 60);
-                const educationMatch = Math.round(Math.random() * 20 + 70);
-                
-                const recommendations = {
-                    courses: missingDisplay.slice(0, 5).map(s => ({
-                        name: `Complete ${s} Course`,
-                        platform: 'Online'
-                    })),
-                    projects: missingDisplay.slice(0, 3).map(s => ({
-                        name: `Build with ${s}`,
-                        description: `Hands-on project using ${s}`
-                    })),
-                    certifications: missingDisplay.slice(0, 3).map(s => ({
-                        name: `${s} Certification`
-                    }))
-                };
+            try {
+                showLoading('Analyzing your resume...');
 
-                const data = {
-                    overall_score: overallScore,
-                    keyword_match: atsScore,
-                    experience_match: experienceMatch,
-                    education_match: educationMatch,
-                    matching_skills: matchingDisplay.length > 0 ? matchingDisplay : ['No exact matches found'],
-                    missing_skills: missingDisplay.length > 0 ? missingDisplay : ['No missing skills!'],
-                    recommendations: recommendations,
-                    resume_skills: resumeSkills,
-                    job_skills: jobSkills
-                };
+                const response = await fetch(`${API_BASE_URL}/analysis/analyze/${currentResumeId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        job_description: jobDesc,
+                        job_title: 'Software Engineer',
+                        company: 'Tech Company'
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Analysis failed');
 
                 currentAnalysisData = data;
                 displayResults(data);
-                showToast(`Analysis complete! ${matching.length} skills matched, ${missing.length} missing`, 'success');
+                hideLoading();
+                showToast('✅ Analysis completed successfully!', 'success');
 
                 totalScore += data.overall_score || 0;
                 const avgScore = Math.round(totalScore / resumeCount);
@@ -1977,15 +2081,16 @@
                 
                 skillsLearned += (data.matching_skills || []).length;
                 document.getElementById('dashSkills').textContent = skillsLearned;
-
                 updateAchievements();
 
+            } catch (error) {
+                hideLoading();
+                showToast('❌ Analysis failed: ' + error.message, 'error');
+            } finally {
+                btn.classList.remove('loading');
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-robot"></i> Analyze';
-
-            }, 1500);
+            }
         }
-
         window.analyzeResume = analyzeResume;
 
         // =============================================
@@ -2090,7 +2195,7 @@
         }
 
         // =============================================
-        // DASHBOARD
+        // DASHBOARD - ACHIEVEMENTS
         // =============================================
         function updateAchievements() {
             const items = document.querySelectorAll('.achievement-item');
@@ -2099,17 +2204,14 @@
                 items[0].className = 'achievement-item completed';
                 items[0].innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i> ✓ Complete your first analysis';
             }
-            
             if (currentAnalysisData && currentAnalysisData.overall_score >= 70) {
                 items[1].className = 'achievement-item completed';
                 items[1].innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i> ✓ Achieve 70%+ compatibility score';
             }
-            
             if (skillsLearned >= 5) {
                 items[2].className = 'achievement-item completed';
                 items[2].innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i> ✓ Complete 5 skill recommendations';
             }
-            
             if (resumeCount >= 3) {
                 items[3].className = 'achievement-item completed';
                 items[3].innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i> ✓ Upload 3 resumes';
@@ -2124,7 +2226,7 @@
                 showToast('No analysis data to export', 'warning');
                 return;
             }
-            showToast('Report exported as PDF!', 'success');
+            showToast('📄 Report exported as PDF!', 'success');
         }
         window.exportReport = exportReport;
 
@@ -2141,7 +2243,7 @@
             a.download = `analysis_${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            showToast('JSON exported successfully!', 'success');
+            showToast('📄 JSON exported successfully!', 'success');
         }
         window.exportJSON = exportJSON;
 
@@ -2149,12 +2251,11 @@
         // INIT
         // =============================================
         console.log('🚀 ResumeAI is ready!');
-        console.log('📄 Upload a resume to get started');
+        console.log('📡 API URL:', API_BASE_URL);
+        console.log('✨ Enhanced UI with animations, loading states, and error handling');
         
-        // Check authentication status
+        // Check authentication on load
         checkAuth();
     </script>
-    <!-- At the end of the body, after other scripts -->
-<script src="js/auth.js"></script>
 </body>
 </html>
