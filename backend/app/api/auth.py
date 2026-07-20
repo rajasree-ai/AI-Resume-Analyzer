@@ -61,8 +61,14 @@ def register():
         if len(password) < 6:
             return jsonify({'error': 'Password must be at least 6 characters'}), 400
         
-        # Check existing users (in-memory for demo)
+        # Get app instance
         app = current_app
+        
+        # Ensure users dict exists
+        if not hasattr(app, 'users'):
+            app.users = {}
+        
+        # Check existing users
         for user in app.users.values():
             if user['username'] == username:
                 return jsonify({'error': 'Username already taken'}), 400
@@ -70,6 +76,9 @@ def register():
                 return jsonify({'error': 'Email already registered'}), 400
         
         # Create user
+        if not hasattr(app, 'user_id_counter'):
+            app.user_id_counter = 1
+        
         user_id = app.user_id_counter
         app.user_id_counter += 1
         
@@ -88,6 +97,8 @@ def register():
         }
         
         app.users[user_id] = user
+        print(f"✅ User created: {username} (ID: {user_id})")
+        print(f"📊 Total users: {len(app.users)}")
         
         token = generate_auth_token(user_id)
         
@@ -122,8 +133,14 @@ def login():
         if not email or not password:
             return jsonify({'error': 'Email and password required'}), 400
         
-        # Find user
+        # Get app instance
         app = current_app
+        
+        # Ensure users dict exists
+        if not hasattr(app, 'users'):
+            app.users = {}
+        
+        # Find user
         user = None
         for u in app.users.values():
             if u['email'] == email:
@@ -169,6 +186,10 @@ def get_current_user():
     try:
         user_id = get_jwt_identity()
         app = current_app
+        
+        if not hasattr(app, 'users'):
+            app.users = {}
+        
         user = app.users.get(user_id)
         
         if not user:
@@ -201,3 +222,44 @@ def logout():
         'success': True,
         'message': 'Logout successful'
     }), 200
+
+# =============================================
+# RESET PASSWORD REQUEST
+# =============================================
+
+@auth_bp.route('/reset-password-request', methods=['POST'])
+def reset_password_request():
+    try:
+        data = request.get_json()
+        email = data.get('email', '').strip().lower()
+        
+        if not email:
+            return jsonify({'error': 'Email is required'}), 400
+        
+        app = current_app
+        
+        if not hasattr(app, 'users'):
+            app.users = {}
+        
+        user = None
+        for u in app.users.values():
+            if u['email'] == email:
+                user = u
+                break
+        
+        if not user:
+            return jsonify({
+                'success': True,
+                'message': 'If the email exists, a reset link will be sent'
+            }), 200
+        
+        reset_token = generate_auth_token(user['id'], expires_in=1)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Password reset token generated',
+            'reset_token': reset_token
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

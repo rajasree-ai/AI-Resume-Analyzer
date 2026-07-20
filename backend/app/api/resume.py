@@ -53,8 +53,16 @@ def upload_resume():
         if not skills:
             skills = ['Python', 'JavaScript', 'SQL', 'Git', 'React', 'Node.js']
         
-        # Create resume record
+        # Get app instance
         app = current_app
+        
+        # Ensure resumes dict exists
+        if not hasattr(app, 'resumes'):
+            app.resumes = {}
+        if not hasattr(app, 'resume_id_counter'):
+            app.resume_id_counter = 1
+        
+        # Create resume record
         resume_id = app.resume_id_counter
         app.resume_id_counter += 1
         
@@ -70,6 +78,7 @@ def upload_resume():
         }
         
         app.resumes[resume_id] = resume
+        print(f"✅ Resume uploaded: {filename} (ID: {resume_id})")
         
         return jsonify({
             'success': True,
@@ -89,6 +98,10 @@ def upload_resume():
 def get_resume(resume_id):
     try:
         app = current_app
+        
+        if not hasattr(app, 'resumes'):
+            app.resumes = {}
+        
         resume = app.resumes.get(resume_id)
         if not resume:
             return jsonify({'error': 'Resume not found'}), 404
@@ -107,6 +120,10 @@ def get_resume(resume_id):
 def list_resumes():
     try:
         app = current_app
+        
+        if not hasattr(app, 'resumes'):
+            app.resumes = {}
+        
         resumes = list(app.resumes.values())
         
         return jsonify({

@@ -16,8 +16,13 @@ load_dotenv()
 def create_app():
     """Create and configure the Flask application"""
     
+    # Get the absolute path
     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     frontend_folder = os.path.join(project_root, 'frontend')
+    
+    # If frontend folder doesn't exist, try parent directory
+    if not os.path.exists(frontend_folder):
+        frontend_folder = os.path.join(os.path.dirname(project_root), 'frontend')
     
     app = Flask(__name__, 
                 static_folder=frontend_folder,
@@ -48,10 +53,22 @@ def create_app():
     os.makedirs('backend/data', exist_ok=True)
     
     # =============================================
-    # Register blueprints - FIXED IMPORTS
+    # ⚠️ CRITICAL FIX: Initialize in-memory storage
     # =============================================
+    app.users = {}
+    app.resumes = {}
+    app.analyses = {}
+    app.jobs = {}
+    app.user_id_counter = 1
+    app.resume_id_counter = 1
+    app.analysis_id_counter = 1
+    app.job_id_counter = 1
     
-    # Import and register auth blueprint
+    print("✅ In-memory storage initialized")
+    
+    # =============================================
+    # Register blueprints
+    # =============================================
     try:
         from .api.auth import auth_bp
         app.register_blueprint(auth_bp)
@@ -59,7 +76,6 @@ def create_app():
     except ImportError as e:
         print(f"⚠️  Could not load auth blueprint: {e}")
     
-    # Import and register resume blueprint
     try:
         from .api.resume import resume_bp
         app.register_blueprint(resume_bp)
@@ -67,7 +83,6 @@ def create_app():
     except ImportError as e:
         print(f"⚠️  Could not load resume blueprint: {e}")
     
-    # Import and register analysis blueprint
     try:
         from .api.analysis import analysis_bp
         app.register_blueprint(analysis_bp)
@@ -114,7 +129,8 @@ def create_app():
     def health_check():
         return jsonify({
             'status': 'healthy',
-            'message': 'AI Resume Skill Gap Analyzer is running'
+            'message': 'AI Resume Skill Gap Analyzer is running',
+            'users_count': len(app.users)
         }), 200
     
     return app

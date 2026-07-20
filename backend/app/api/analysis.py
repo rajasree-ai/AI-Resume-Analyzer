@@ -29,6 +29,15 @@ def extract_skills_from_text(text):
 def analyze_resume(resume_id):
     try:
         app = current_app
+        
+        # Ensure data structures exist
+        if not hasattr(app, 'resumes'):
+            app.resumes = {}
+        if not hasattr(app, 'analyses'):
+            app.analyses = {}
+        if not hasattr(app, 'analysis_id_counter'):
+            app.analysis_id_counter = 1
+        
         resume = app.resumes.get(resume_id)
         if not resume:
             return jsonify({'error': 'Resume not found'}), 404
@@ -71,6 +80,7 @@ def analyze_resume(resume_id):
             'created_at': datetime.utcnow().isoformat()
         }
         app.analyses[analysis_id] = analysis
+        print(f"✅ Analysis created: ID {analysis_id} for resume {resume_id}")
         
         return jsonify({
             'analysis_id': analysis_id,
